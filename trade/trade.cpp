@@ -6,7 +6,7 @@ using namespace std;
 
 class trade{
     public:
-    int AGcoin, balance;
+    int AGcoin, balanc
     int bitcoin;
     int deposit, withdraw;
     int total_equity = 100;
