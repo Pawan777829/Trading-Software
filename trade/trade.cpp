@@ -1,200 +1,219 @@
 #include <iostream>
-#include<vector>
-#include <bits/stdc++.h>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-class trade{
-    public:
-    int AGcoin, balanc
-    int bitcoin;
-    int deposit, withdraw;
-    int total_equity = 100;
-    int predict;
-    int AGcoin_value;
-    int bitcoin_value;
-    int crypto_invest;
-    int crypto_return;
+class TradingApp {
+private:
+    double balance;
+    double profitLoss;
+    double bitcoins;
+    double dogecoins; 
+    double totalBitcoinsPurchased;
+    double totalDogecoinsPurchased;
+    double totalBitcoinsSold;
+    double totalDogecoinsSold;
+    double bitcoinRate; 
+    double dogecoinRate;
 
-    vector<pair<string, int >> transactions ;
+    vector<string> transactions;
 
-    double Deposit(int money)
-    {
-        deposit += money;
-        balance += money;
-        transactions.push_back({ "Deposit:", money });
+public:
+    TradingApp() : balance(0), profitLoss(0), bitcoins(0), dogecoins(0),totalBitcoinsPurchased(0), totalDogecoinsPurchased(0), totalBitcoinsSold(0), totalDogecoinsSold(0),bitcoinRate(100), dogecoinRate(0.2)  {}
+
+    void getAccountInfo() {
+        cout << "Balance: " << balance << endl;
+        cout << "Profit/Loss: " << profitLoss << endl;
+        cout << "Bitcoins: " << bitcoins << endl;
+        cout << "Dogecoins: " << dogecoins << endl;
     }
 
-    void Get_account_information()
-    {
- 
-        cout << "Money Details:\n";
-        cout << "Bank Balance:" << balance << endl;
-        cout << "AG-coin:" << AGcoin << endl;
-        cout << "Bitcoin:" << bitcoin << endl;
+    void depositMoney(double amount) {
+        balance += amount;
+        transactions.push_back("Deposit: $" + to_string(amount));
+        cout << "....Money deposited successfully. Balance updated....\n";
+
     }
 
-    bool Withdraw(int money)
-    {
-        if (money > balance) {
+    bool withdrawMoney(double amount) {
+        if (amount > balance) {
+            cout << ".....Insufficient balance in your account....." << endl;
             return false;
         }
-        withdraw += money;
-        balance -= money;
-        transactions.push_back({ "Withdraw:", money });
+        balance -= amount;
+        transactions.push_back("Withdraw: $" + to_string(amount));
         return true;
     }
 
-    bool buy_crypto()
-    {
-        int option;
-        cout << "Want to purchase AG-coin press 1 else "
-                "for bitcoin press 2\n";
-        cin >> option;
- 
-        // Checking equity
-        if (total_equity != 0) {
-            srand(time(NULL));
-            int luck = rand();
- 
-            // Checking if random number is divisible by
-            // 251 to check (random case for buying  crypto
-            // used)
-            if (luck % 251 == 0) {
-                if (option == 1) {
-                    AGcoin += 1;
-                    balance -= AGcoin_value;
-                    crypto_invest
-                        += (AGcoin)*AGcoin_value;
-                }
-                else {
-                    bitcoin += 1;
-                    balance -= bitcoin_value;
-                    crypto_invest += bitcoin_value;
-                }
+    void buyShares(string type, double amount) {
+        if (type == "Bitcoin") {
+    double bitcoinPrice = 100; // Assuming 1 Bitcoin = $10
+    double totalPrice = amount * bitcoinPrice;
+    if (totalPrice >= balance) {
+        cout << "....Insufficient balance to buy.. " << amount << " Bitcoins." << endl;
+        return;
+    }
+    bitcoins += amount;
+    balance -= totalPrice;
+    totalBitcoinsPurchased += amount;
+    transactions.push_back("Bought " + to_string(amount) + " Bitcoins");
+    cout << ".....Bitcoin bought successfully....." << endl;
+}
+        else if (type == "Dogecoin") {
+            double totalPrice = amount * 0.2;
+            if (totalPrice >= balance) {
+                cout << "Insufficient balance to buy " << amount << " Dogecoins." << endl;
+                return;
             }
-            else {
-                return false;
+            dogecoins += amount;
+            balance -= totalPrice;
+            totalDogecoinsPurchased += amount;
+            transactions.push_back("Bought " + to_string(amount) + " Dogecoins");
+            cout << ".....Dogecoin bought successfully....." << endl;
+        } else {
+            cout << "Invalid cryptocurrency type." << std::endl;
+        }
+    }
+
+    void sellShares(string type, double amount) {
+        // Implementation for selling cryptocurrency
+        if (type == "Bitcoin") {
+            if (bitcoins >= amount) {
+                bitcoins -= amount;
+                balance += amount * 5000; // Assuming 1 Bitcoin = 5000
+                transactions.push_back("Sold " + to_string(amount) + " Bitcoins");
+                cout << ".....bitcoin sold successfully....." << endl;
+            } else {
+                cout << "Insufficient Bitcoins." << endl;
+            }
+        } else if (type == "Dogecoin") {
+            if (dogecoins >= amount) {
+                dogecoins -= amount;
+                balance += amount * 0.2; // Assuming 1 Dogecoin = 0.2
+                transactions.push_back("Sold " + to_string(amount) + " Dogecoins");
+                cout << ".....Dogecoin sold successfully......" << endl;
+            } else {
+                cout << "Insufficient Dogecoins." << endl;
             }
         }
-        else {
-            return false;
-        }
- 
-        return true;
     }
 
-    bool sell_crypto()
-    {
-        int option;
-        cout << "Want to sell AG-coin press 1 else for " "bitcoin press 2\n";
-        cin >> option;
- 
-        if (option == 2) {
-            if (bitcoin == 0)
-                return false;
-            crypto_return += bitcoin_value;
-            balance += bitcoin_value;
-            transactions.push_back(
-                { "Bitcoin Sold:", bitcoin_value });
-            bitcoin -= 1;
+    void checkTransactions() {
+        // Implementation for checking transactions
+         for (const auto& transaction : transactions) {
+            cout << transaction << endl;
         }
-        else {
-            if (AGcoin == 0)
-                return false;
-            crypto_return += AGcoin_value;
-            balance += AGcoin_value;
-            transactions.push_back(
-                { "AG-coin Sold:", AGcoin_value });
-            AGcoin -= 1;
-        }
- 
-        return true;
     }
 
-    trade()
-    {
-        crypto_invest = 0;
-        crypto_return = 0;
-        total_equity = 100;
-        balance = 50000;
-        AGcoin = 5000;
-        bitcoin = 5000;
-        withdraw = 0;
-        deposit = 0;
-        AGcoin_value = 100;
-        bitcoin_value = 500;
+    void checkSharePrices() {
+        // Implementation for checking share prices
+        cout << "Share price for Company X: $100\n";
+        cout << "Share price for Company Y: $200\n";
+    }
+
+    void checkAccountBalance() {
+        // Implementation for checking account balance
+        cout << "Account balance: $" << balance << endl;
+    }
+
+    void getPurchaseSummary() {
+        cout << "Total Bitcoins Purchased: $" << totalBitcoinsPurchased << endl;
+        cout << "Total Dogecoins Purchased: $" << totalDogecoinsPurchased << endl;
+    }
+
+    void getSaleSummary() {
+        cout << "Total Bitcoins Sold: $" << totalBitcoinsSold << endl;
+        cout << "Total Dogecoins Sold: $" << totalDogecoinsSold << endl;
     }
 };
 
-int main()
-{
-    trade person;
-    int amount, choice;
-    do {
-        cout << endl;
-        cout << "1. If want to have your Account Info "<< endl;
-        cout << "2. If want to Deposit your money "<< endl;
-        cout << "3. If want to withdraw your money "<< endl;
-        cout << "4. If want to know your Buy Crypto "<< endl;
-        cout << "5. If want to know your Sell Crypto "<< endl;
-        cout << "6. Exit" << endl;
-        cout << "Enter choice: ";
-        cin >> choice;
-        int ans;
- 
-        switch (choice) {
-        case 1:
-            person.Get_account_information();
-            break;
- 
-        case 2:
-            cout << "Enter amount to deposit : ";
-            cin >> amount;
-            ans = person.Deposit(amount);
-            if (ans)
-                cout << "Successfully deposited money"<< endl;
-            else
-                cout << "Failed\n";
- 
-            break;
- 
-        case 3:
-            cout << "Enter amount to withdrawn : ";
-            cin >> amount;
-            person.Withdraw(amount);
- 
-            if (ans)
-                cout << "Successfully withdrawn Amount"
-                     << endl;
-            else
-                cout << "Not Enough Balance\n";
- 
-            break;
- 
-        case 4:
-            ans = person.buy_crypto();
-            if (ans)
-                cout << "Successful Transaction" << endl;
-            else
-                cout << "Better Luck next time\n";
-            break;
- 
-        case 5:
-            ans = person.sell_crypto();
-            if (ans)
-                cout << "Successful Transaction" << endl;
-            else
-                cout << "Not Enough Cryptocoins\n";
-            break;
+int main() {
+    // Implementation for main function
+     string username, password;
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
 
-        case 6:
-        cout << "Exiting..." << endl;
-                break;
- 
-        default:
-            exit(0);
-            break;
+    // Simulate login check
+    if (username == "user" && password == "pass") {
+        cout << "\n-------Login successful.--------\n";
+        TradingApp app;
+        int choice;
+        double amount;
+        string cryptoType;
+
+        while (true) {
+            cout << "\n --------TRADING SOFTWARE---------\n";
+            cout << "\nTrading Application Menu:\n";
+            cout << "1. Get Account Info\n";
+            cout << "2. Deposit Money\n";
+            cout << "3. Withdraw Money\n";
+            cout << "5. Sell Shares\n";
+            cout << "6. Check Transactions\n";
+            cout << "7. Check Share Prices\n";
+            cout << "8. Check Account Balance\n";
+            cout << "8. total purchased\n";
+            cout << "8. total sold\n";
+            cout << "9. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    app.getAccountInfo();
+                    break;
+                case 2:
+                    cout << "Enter amount to deposit: $";
+                    cin >> amount;
+                    app.depositMoney(amount);
+                    
+                    break;
+                case 3:
+                    cout << "Enter amount to withdraw: $ ";
+                    cin >> amount;
+                    app.withdrawMoney(amount);
+                    break;
+                case 4:
+                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin): ";
+                    cin >> cryptoType;
+                    cout << "Enter amount to buy: $ ";
+                    cin >> amount;
+                    app.buyShares(cryptoType,amount);
+                    break;
+                case 5:
+                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin): ";
+                    cin >> cryptoType;
+                    cout << "Enter amount to sell: $ ";
+                    cin >> amount;
+                    app.sellShares(cryptoType, amount);
+                    break;
+                case 6:
+                    app.checkTransactions();
+                    break;
+                case 7:
+                    app.checkSharePrices();
+                    break;
+                case 8:
+                    app.checkAccountBalance();
+                    break;
+                case 9:
+                    app.getPurchaseSummary();
+                    break;
+                case 10:
+                    app.getSaleSummary();
+                    break;
+                case 11:
+                    cout << "Exiting the application.\n";
+                    return 0;
+                default:
+                    cout << "Invalid choice. Please try again.\n";
+            }
         }
-     }while(choice != '6');
+    } else {
+        cout << "Login failed.\n";
+    }
+
+    return 0;
 }
