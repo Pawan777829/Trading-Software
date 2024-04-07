@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iomanip> // Include the <iomanip> header file for stream manipulations
 
 using namespace std;
 
@@ -9,73 +10,111 @@ private:
     double balance;
     double profitLoss;
     double bitcoins;
-    double dogecoins; 
+    double dogecoins;
+    double ripplecoin;
     double totalBitcoinsPurchased;
+    double totalripplecoinsPurchased;
     double totalDogecoinsPurchased;
     double totalBitcoinsSold;
+    double totalripplecoinsSold;
     double totalDogecoinsSold;
-    double bitcoinRate; 
-    double dogecoinRate;
+    double bitcoinprice;
+    double dogecoinprice;
+    double ripplecoinprice;
 
     vector<string> transactions;
 
 public:
-    TradingApp() : balance(0), profitLoss(0), bitcoins(0), dogecoins(0),totalBitcoinsPurchased(0), totalDogecoinsPurchased(0), totalBitcoinsSold(0), totalDogecoinsSold(0),bitcoinRate(100), dogecoinRate(0.2)  {}
+    TradingApp() : balance(0), profitLoss(0), bitcoins(0.0), dogecoins(0.0),ripplecoin(0.0),totalBitcoinsPurchased(0), totalDogecoinsPurchased(0),totalripplecoinsPurchased(0), totalBitcoinsSold(0), totalDogecoinsSold(0),totalripplecoinsSold(0)  {}
 
     void getAccountInfo() {
         cout << "Balance: " << balance << endl;
         cout << "Profit/Loss: " << profitLoss << endl;
         cout << "Bitcoins: " << bitcoins << endl;
         cout << "Dogecoins: " << dogecoins << endl;
+        cout << "Ripplecoins: " << ripplecoin << endl;
     }
 
+    // void depositMoney(double amount) {
+    //     balance += amount;
+    //     transactions.push_back("Deposit: $" + to_string(amount));
+    //     cout << "....Money deposited successfully. Balance updated....\n";
+
+    // }
     void depositMoney(double amount) {
-        balance += amount;
-        transactions.push_back("Deposit: $" + to_string(amount));
-        cout << "....Money deposited successfully. Balance updated....\n";
-
-    }
-
-    bool withdrawMoney(double amount) {
-        if (amount > balance) {
-            cout << ".....Insufficient balance in your account....." << endl;
-            return false;
-        }
-        balance -= amount;
-        transactions.push_back("Withdraw: $" + to_string(amount));
-        return true;
-    }
-
-    void buyShares(string type, double amount) {
-        if (type == "Bitcoin") {
-    double bitcoinPrice = 100; // Assuming 1 Bitcoin = $10
-    double totalPrice = amount * bitcoinPrice;
-    if (totalPrice >= balance) {
-        cout << "....Insufficient balance to buy.. " << amount << " Bitcoins." << endl;
+    if (amount <= 0) {
+        cout << "Invalid amount. Please enter a positive value for deposit." << endl;
         return;
     }
-    bitcoins += amount;
-    balance -= totalPrice;
-    totalBitcoinsPurchased += amount;
-    transactions.push_back("Bought " + to_string(amount) + " Bitcoins");
-    cout << ".....Bitcoin bought successfully....." << endl;
+    
+    balance += amount;
+    transactions.push_back("Deposit: $" + to_string(amount));
+    cout << "....Money deposited successfully. Balance updated....\n";
 }
-        else if (type == "Dogecoin") {
-            double totalPrice = amount * 0.2;
-            if (totalPrice >= balance) {
-                cout << "Insufficient balance to buy " << amount << " Dogecoins." << endl;
-                return;
-            }
-            dogecoins += amount;
-            balance -= totalPrice;
-            totalDogecoinsPurchased += amount;
-            transactions.push_back("Bought " + to_string(amount) + " Dogecoins");
-            cout << ".....Dogecoin bought successfully....." << endl;
-        } else {
-            cout << "Invalid cryptocurrency type." << std::endl;
-        }
-    }
 
+
+    bool withdrawMoney(double amount) {
+    if (amount <= 0) {
+        cout << "Invalid amount. Please enter a positive value." << endl;
+        return false;
+    }
+    
+    if (amount > balance) {
+        cout << ".....Insufficient balance in your account....." << endl;
+        return false;
+    }
+    
+    balance -= amount;
+    transactions.push_back("Withdraw: $" + to_string(amount));
+    cout << "....Money withdrawn successfully. Balance updated....\n";
+    return true;
+}
+
+
+    void buyShares(string type, double amount) {
+    double bitcoinPrice = 50000.0;
+    double dogecoinPrice = 30000.0;
+    double ripplecoinPrice = 40000.0;
+
+    if (type == "Bitcoin") {
+        double bitcoinAmount = amount * bitcoinPrice;
+        if (balance >= bitcoinAmount) { // Corrected balance check
+            bitcoins += amount;
+            totalBitcoinsPurchased += amount;
+            balance -= bitcoinAmount;
+            transactions.push_back("Bought " + to_string(amount) + " Bitcoin. New balance: $" + to_string(balance));
+            cout << "Bought  " << amount << " share of Bitcoin at rate of $" <<bitcoinAmount<<" Bitcoinprice. New balance: $" << balance << "\n";
+        } else {
+            cout << "Insufficient funds to buy Bitcoin.\n";
+        }
+    } else if (type == "Dogecoin") {
+        double dogecoinAmount = amount * dogecoinPrice;
+        if (balance >= dogecoinAmount) { // Corrected balance check
+            dogecoins += amount;
+            totalDogecoinsPurchased += amount;
+            balance -= dogecoinAmount;
+            transactions.push_back("Bought " + to_string(amount) + " Dogecoin. New balance: $" + to_string(balance));
+            cout << "Bought " << amount << " share of Dogecoin at rate of $"<<dogecoinAmount<<" Dogecoin. New balance: $" << balance << "\n";
+        } else {
+            cout << "Insufficient funds to buy Dogecoin.\n";
+        }
+    }else if (type == "Ripplecoin") {
+        double ripplecoinAmount = amount * ripplecoinPrice;
+        if (balance >= ripplecoinAmount) { // Corrected balance check
+            dogecoins += amount;
+            totalripplecoinsPurchased += amount;
+            balance -= ripplecoinAmount;
+            transactions.push_back("Bought " + to_string(amount) + " Ripplecoin. New balance: $" + to_string(balance));
+            cout << "Bought " << amount << " share of Ripplecoin at rate of $"<<ripplecoinAmount<<" Ripplecoin. New balance: $" << balance << "\n";
+        } else {
+            cout << "Insufficient funds to buy Ripplecoin.\n";
+        }
+    } else {
+        cout << "Invalid currency \n";
+    }
+}
+
+    
     void sellShares(string type, double amount) {
         // Implementation for selling cryptocurrency
         if (type == "Bitcoin") {
@@ -99,6 +138,57 @@ public:
         }
     }
 
+// void buyShares(string type, double amount) {
+//     double bitcoinPrice = 50000.0;
+//     double dogecoinPrice = 30000.0;
+
+//     double sharePrice = (type == "Bitcoin") ? bitcoinPrice : dogecoinPrice;
+//     double shareAmount = (type == "Bitcoin") ? bitcoins : dogecoins;
+    
+//     double purchaseCost = amount * sharePrice;
+    
+//     if (balance >= purchaseCost) {
+//         shareAmount += amount;
+//         if (type == "Bitcoin") {
+//             bitcoins = shareAmount;
+//             totalBitcoinsPurchased += amount;
+//         } else {
+//             dogecoins = shareAmount;
+//             totalDogecoinsPurchased += amount;
+//         }
+//         balance -= purchaseCost;
+//         profitLoss -= purchaseCost; // Deduct purchase cost from profit/loss
+//         transactions.push_back("Bought " + to_string(amount) + " " + type + ". New balance: $" + to_string(balance));
+//         cout << "Bought " << amount << " share of " << type << " at rate of $" << purchaseCost << ". New balance: $" << balance << "\n";
+//     } else {
+//         cout << "Insufficient funds to buy " << type << ".\n";
+//     }
+// }
+
+// void sellShares(string type, double amount) {
+//     double sharePrice = (type == "Bitcoin") ? bitcoinprice : dogecoinprice;
+//     double shareAmount = (type == "Bitcoin") ? bitcoins : dogecoins;
+    
+//     double sellAmount = amount * sharePrice;
+    
+//     if (shareAmount >= amount) {
+//         shareAmount -= amount;
+//         if (type == "Bitcoin") {
+//             bitcoins = shareAmount;
+//             totalBitcoinsSold += amount;
+//         } else {
+//             dogecoins = shareAmount;
+//             totalDogecoinsSold += amount;
+//         }
+//         balance += sellAmount;
+//         profitLoss += sellAmount; // Add sell amount to profit/loss
+//         transactions.push_back("Sold " + to_string(amount) + " " + type + ". New balance: $" + to_string(balance));
+//         cout << "Sold " << amount << " share of " << type << ". New balance: $" << balance << "\n";
+//     } else {
+//         cout << "Insufficient " << type << " shares.\n";
+//     }
+// }
+
     void checkTransactions() {
         // Implementation for checking transactions
          for (const auto& transaction : transactions) {
@@ -106,11 +196,34 @@ public:
         }
     }
 
-    void checkSharePrices() {
-        // Implementation for checking share prices
-        cout << "Share price for Company X: $100\n";
-        cout << "Share price for Company Y: $200\n";
+    
+    void updatePrices() {
+    // Here, you would implement the logic to fetch the latest prices for Bitcoin and Dogecoin
+    // For example, you might fetch the prices from an API or read them from a file
+    
+    // Assign some dummy values for demonstration purposes
+    bitcoinprice = 50000.0;
+    dogecoinprice = 30000.0;
+    ripplecoinprice = 40000.0;
+}
+
+void checkSharePrices() {
+    // Update the prices before displaying them
+    updatePrices();
+
+    // Check if the prices have been updated successfully
+    if (bitcoinprice <= 0 || dogecoinprice <= 0 || ripplecoinprice <=0) {
+        cout << "Prices not available. Please update prices first." << endl;
+        return;
     }
+
+    // Display the current Bitcoin price
+    cout << "Current Bitcoin price: $" << fixed << setprecision(2) << bitcoinprice << endl;
+
+    // Display the current Dogecoin price
+    cout << "Current Dogecoin price: $" << fixed << setprecision(2) << dogecoinprice << endl;
+    cout << "Current Ripplecoin price: $" << fixed << setprecision(2) << ripplecoinprice << endl;
+}
 
     void checkAccountBalance() {
         // Implementation for checking account balance
@@ -118,13 +231,15 @@ public:
     }
 
     void getPurchaseSummary() {
-        cout << "Total Bitcoins Purchased: $" << totalBitcoinsPurchased << endl;
-        cout << "Total Dogecoins Purchased: $" << totalDogecoinsPurchased << endl;
+        cout << "Total Bitcoins Share Purchased: $" << totalBitcoinsPurchased << endl;
+        cout << "Total Dogecoins Share Purchased: $" << totalDogecoinsPurchased << endl;
+        cout << "Total Ripplecoins Share Purchased: $" << totalripplecoinsPurchased << endl;
     }
 
     void getSaleSummary() {
         cout << "Total Bitcoins Sold: $" << totalBitcoinsSold << endl;
         cout << "Total Dogecoins Sold: $" << totalDogecoinsSold << endl;
+        cout << "Total Ripplecoins Sold: $" << totalripplecoinsSold << endl;
     }
 };
 
@@ -150,13 +265,14 @@ int main() {
             cout << "1. Get Account Info\n";
             cout << "2. Deposit Money\n";
             cout << "3. Withdraw Money\n";
+            cout << "4. Buy Shares\n";
             cout << "5. Sell Shares\n";
             cout << "6. Check Transactions\n";
             cout << "7. Check Share Prices\n";
             cout << "8. Check Account Balance\n";
-            cout << "8. total purchased\n";
-            cout << "8. total sold\n";
-            cout << "9. Exit\n";
+            cout << "9. total purchased\n";
+            cout << "10. total sold\n";
+            cout << "11. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
 
@@ -176,14 +292,14 @@ int main() {
                     app.withdrawMoney(amount);
                     break;
                 case 4:
-                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin): ";
+                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin/Ripplecoin): ";
                     cin >> cryptoType;
-                    cout << "Enter amount to buy: $ ";
+                    cout << "Enter Share to buy: $ ";
                     cin >> amount;
                     app.buyShares(cryptoType,amount);
                     break;
                 case 5:
-                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin): ";
+                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin/Ripplecoin): ";
                     cin >> cryptoType;
                     cout << "Enter amount to sell: $ ";
                     cin >> amount;
