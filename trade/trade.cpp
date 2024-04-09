@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iomanip> // Include the <iomanip> header file for stream manipulations
+#include <limits> 
 
 using namespace std;
 
@@ -13,11 +14,11 @@ private:
     double dogecoins;
     double ripplecoin;
     double totalBitcoinsPurchased;
+    double totalDogecoinsPurchased ;
     double totalripplecoinsPurchased;
-    double totalDogecoinsPurchased;
     double totalBitcoinsSold;
-    double totalripplecoinsSold;
     double totalDogecoinsSold;
+    double totalripplecoinsSold;
     double bitcoinprice;
     double dogecoinprice;
     double ripplecoinprice;
@@ -116,78 +117,141 @@ public:
 
     
     void sellShares(string type, double amount) {
-        // Implementation for selling cryptocurrency
-        if (type == "Bitcoin") {
-            if (bitcoins >= amount) {
-                bitcoins -= amount;
-                balance += amount * 5000; // Assuming 1 Bitcoin = 5000
-                transactions.push_back("Sold " + to_string(amount) + " Bitcoins");
-                cout << ".....bitcoin sold successfully....." << endl;
-            } else {
-                cout << "Insufficient Bitcoins." << endl;
-            }
-        } else if (type == "Dogecoin") {
-            if (dogecoins >= amount) {
-                dogecoins -= amount;
-                balance += amount * 0.2; // Assuming 1 Dogecoin = 0.2
-                transactions.push_back("Sold " + to_string(amount) + " Dogecoins");
-                cout << ".....Dogecoin sold successfully......" << endl;
-            } else {
-                cout << "Insufficient Dogecoins." << endl;
-            }
+    double bitcoinPrice = 50000.0;
+    double dogecoinPrice = 30000.0;
+    double ripplecoinPrice = 40000.0;
+
+    if (type == "Bitcoin") {
+        if (bitcoins >= amount) {
+            double bitcoinAmount = amount * bitcoinPrice;
+            bitcoins -= amount;
+            totalBitcoinsSold += amount;
+            balance += bitcoinAmount;
+            transactions.push_back("Sold " + to_string(amount) + " Bitcoin. New balance: $" + to_string(balance));
+            cout << "Sold " << amount << " share of Bitcoin at rate of $" << bitcoinAmount << " Bitcoin. New balance: $" << balance << "\n";
+        } else {
+            cout << "Insufficient Bitcoins to sell.\n";
         }
+    } else if (type == "Dogecoin") {
+        if (dogecoins >= amount) {
+            double dogecoinAmount = amount * dogecoinPrice;
+            dogecoins -= amount;
+            totalDogecoinsSold += amount;
+            balance += dogecoinAmount;
+            transactions.push_back("Sold " + to_string(amount) + " Dogecoin. New balance: $" + to_string(balance));
+            cout << "Sold " << amount << " share of Dogecoin at rate of $" << dogecoinAmount << " Dogecoin. New balance: $" << balance << "\n";
+        } else {
+            cout << "Insufficient Dogecoins to sell.\n";
+        }
+    } else if (type == "Ripplecoin") {
+        if (ripplecoin >= amount) {
+            double ripplecoinAmount = amount * ripplecoinPrice;
+            ripplecoin -= amount;
+            totalripplecoinsSold += amount;
+            balance += ripplecoinAmount;
+            transactions.push_back("Sold " + to_string(amount) + " Ripplecoin. New balance: $" + to_string(balance));
+            cout << "Sold " << amount << " share of Ripplecoin at rate of $" << ripplecoinAmount << " Ripplecoin. New balance: $" << balance << "\n";
+        } else {
+            cout << "Insufficient Ripplecoins to sell.\n";
+        }
+    } else {
+        cout << "Invalid currency.\n";
     }
+}
 
 // void buyShares(string type, double amount) {
-//     double bitcoinPrice = 50000.0;
-//     double dogecoinPrice = 30000.0;
+//         double bitcoinPrice = 50000.0;
+//         double dogecoinPrice = 30000.0;
+//         double ripplecoinPrice = 40000.0;
 
-//     double sharePrice = (type == "Bitcoin") ? bitcoinPrice : dogecoinPrice;
-//     double shareAmount = (type == "Bitcoin") ? bitcoins : dogecoins;
-    
-//     double purchaseCost = amount * sharePrice;
-    
-//     if (balance >= purchaseCost) {
-//         shareAmount += amount;
+//         double purchasePrice;
 //         if (type == "Bitcoin") {
-//             bitcoins = shareAmount;
-//             totalBitcoinsPurchased += amount;
+//             purchasePrice = amount * bitcoinPrice;
+//             if (balance >= purchasePrice) {
+//                 bitcoins += amount;
+//                 totalBitcoinsPurchased += amount;
+//                 balance -= purchasePrice;
+//                 profitLoss -= purchasePrice; // Deduct purchase price from profit/loss
+//                 transactions.push_back("Bought " + to_string(amount) + " Bitcoin. New balance: $" + to_string(balance));
+//                 cout << "Bought " << amount << " share of Bitcoin at rate of $" << bitcoinPrice << ". New balance: $" << balance << endl;
+//             } else {
+//                 cout << "Insufficient funds to buy Bitcoin.\n";
+//             }
+//         } else if (type == "Dogecoin") {
+//             purchasePrice = amount * dogecoinPrice;
+//             if (balance >= purchasePrice) {
+//                 dogecoins += amount;
+//                 totalDogecoinsPurchased += amount;
+//                 balance -= purchasePrice;
+//                 profitLoss -= purchasePrice; // Deduct purchase price from profit/loss
+//                 transactions.push_back("Bought " + to_string(amount) + " Dogecoin. New balance: $" + to_string(balance));
+//                 cout << "Bought " << amount << " share of Dogecoin at rate of $" << dogecoinPrice << ". New balance: $" << balance << endl;
+//             } else {
+//                 cout << "Insufficient funds to buy Dogecoin.\n";
+//             }
+//         } else if (type == "Ripplecoin") {
+//             purchasePrice = amount * ripplecoinPrice;
+//             if (balance >= purchasePrice) {
+//                 ripplecoin += amount;
+//                 totalripplecoinsPurchased += amount;
+//                 balance -= purchasePrice;
+//                 profitLoss -= purchasePrice; // Deduct purchase price from profit/loss
+//                 transactions.push_back("Bought " + to_string(amount) + " Ripplecoin. New balance: $" + to_string(balance));
+//                 cout << "Bought " << amount << " share of Ripplecoin at rate of $" << ripplecoinPrice << ". New balance: $" << balance << endl;
+//             } else {
+//                 cout << "Insufficient funds to buy Ripplecoin.\n";
+//             }
 //         } else {
-//             dogecoins = shareAmount;
-//             totalDogecoinsPurchased += amount;
+//             cout << "Invalid currency.\n";
 //         }
-//         balance -= purchaseCost;
-//         profitLoss -= purchaseCost; // Deduct purchase cost from profit/loss
-//         transactions.push_back("Bought " + to_string(amount) + " " + type + ". New balance: $" + to_string(balance));
-//         cout << "Bought " << amount << " share of " << type << " at rate of $" << purchaseCost << ". New balance: $" << balance << "\n";
-//     } else {
-//         cout << "Insufficient funds to buy " << type << ".\n";
 //     }
-// }
 
-// void sellShares(string type, double amount) {
-//     double sharePrice = (type == "Bitcoin") ? bitcoinprice : dogecoinprice;
-//     double shareAmount = (type == "Bitcoin") ? bitcoins : dogecoins;
-    
-//     double sellAmount = amount * sharePrice;
-    
-//     if (shareAmount >= amount) {
-//         shareAmount -= amount;
+//     void sellShares(string type, double amount) {
+//         double bitcoinPrice = 50000.0;
+//         double dogecoinPrice = 30000.0;
+//         double ripplecoinPrice = 40000.0;
+
+//         double salePrice;
 //         if (type == "Bitcoin") {
-//             bitcoins = shareAmount;
-//             totalBitcoinsSold += amount;
+//             if (bitcoins >= amount) {
+//                 salePrice = amount * bitcoinPrice;
+//                 bitcoins -= amount;
+//                 totalBitcoinsSold += amount;
+//                 balance += salePrice;
+//                 profitLoss += salePrice; // Add sale price to profit/loss
+//                 transactions.push_back("Sold " + to_string(amount) + " Bitcoin. New balance: $" + to_string(balance));
+//                 cout << "Sold " << amount << " share of Bitcoin at rate of $" << bitcoinPrice << ". New balance: $" << balance << endl;
+//             } else {
+//                 cout << "Insufficient Bitcoins to sell.\n";
+//             }
+//         } else if (type == "Dogecoin") {
+//             if (dogecoins >= amount) {
+//                 salePrice = amount * dogecoinPrice;
+//                 dogecoins -= amount;
+//                 totalDogecoinsSold += amount;
+//                 balance += salePrice;
+//                 profitLoss += salePrice; // Add sale price to profit/loss
+//                 transactions.push_back("Sold " + to_string(amount) + " Dogecoin. New balance: $" + to_string(balance));
+//                 cout << "Sold " << amount << " share of Dogecoin at rate of $" << dogecoinPrice << ". New balance: $" << balance << endl;
+//             } else {
+//                 cout << "Insufficient Dogecoins to sell.\n";
+//             }
+//         } else if (type == "Ripplecoin") {
+//             if (ripplecoin >= amount) {
+//                 salePrice = amount * ripplecoinPrice;
+//                 ripplecoin -= amount;
+//                 totalripplecoinsSold += amount;
+//                 balance += salePrice;
+//                 profitLoss += salePrice; // Add sale price to profit/loss
+//                 transactions.push_back("Sold " + to_string(amount) + " Ripplecoin. New balance: $" + to_string(balance));
+//                 cout << "Sold " << amount << " share of Ripplecoin at rate of $" << ripplecoinPrice << ". New balance: $" << balance << endl;
+//             } else {
+//                 cout << "Insufficient Ripplecoins to sell.\n";
+//             }
 //         } else {
-//             dogecoins = shareAmount;
-//             totalDogecoinsSold += amount;
+//             cout << "Invalid currency.\n";
 //         }
-//         balance += sellAmount;
-//         profitLoss += sellAmount; // Add sell amount to profit/loss
-//         transactions.push_back("Sold " + to_string(amount) + " " + type + ". New balance: $" + to_string(balance));
-//         cout << "Sold " << amount << " share of " << type << ". New balance: $" << balance << "\n";
-//     } else {
-//         cout << "Insufficient " << type << " shares.\n";
 //     }
-// }
 
     void checkTransactions() {
         // Implementation for checking transactions
@@ -292,19 +356,98 @@ int main() {
                     app.withdrawMoney(amount);
                     break;
                 case 4:
-                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin/Ripplecoin): ";
-                    cin >> cryptoType;
-                    cout << "Enter Share to buy: $ ";
-                    cin >> amount;
-                    app.buyShares(cryptoType,amount);
-                    break;
+    while (true) {
+        cout << "Choose the type of cryptocurrency to buy:\n";
+        cout << "1. Bitcoin\n";
+        cout << "2. Dogecoin\n";
+        cout << "3. Ripplecoin\n";
+        cout << "Enter the option number: ";
+
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter a number.\n";
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+            continue;
+        }
+
+        // Validate the option
+        if (choice < 1 || choice > 3) {
+            cout << "Invalid option. Please choose a valid option.\n";
+            continue; // Continue to the next iteration of the while loop
+        }
+
+        // Map the numeric option to cryptocurrency type
+        switch (choice) {
+            case 1:
+                cryptoType = "Bitcoin";
+                break;
+            case 2:
+                cryptoType = "Dogecoin";
+                break;
+            case 3:
+                cryptoType = "Ripplecoin";
+                break;
+        }
+
+        // Proceed with buying shares
+        cout << "Enter the share to buy:  ";
+        if (!(cin >> amount)) {
+            cout << "Invalid input. Please enter a numeric value for the amount.\n";
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+            continue;
+        }
+        app.buyShares(cryptoType, amount);
+        break; // Exit the while loop once the purchase is made
+    }
+    break;
+
                 case 5:
-                    cout << "Enter type of cryptocurrency (Bitcoin/Dogecoin/Ripplecoin): ";
-                    cin >> cryptoType;
-                    cout << "Enter amount to sell: $ ";
-                    cin >> amount;
-                    app.sellShares(cryptoType, amount);
-                    break;
+                while (true) {
+        cout << "Choose the type of cryptocurrency to buy:\n";
+        cout << "1. Bitcoin\n";
+        cout << "2. Dogecoin\n";
+        cout << "3. Ripplecoin\n";
+        cout << "Enter the option number: ";
+
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter a number.\n";
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+            continue;
+        }
+
+        // Validate the option
+        if (choice < 1 || choice > 3) {
+            cout << "Invalid option. Please choose a valid option.\n";
+            continue; // Continue to the next iteration of the while loop
+        }
+
+        // Map the numeric option to cryptocurrency type
+        switch (choice) {
+            case 1:
+                cryptoType = "Bitcoin";
+                break;
+            case 2:
+                cryptoType = "Dogecoin";
+                break;
+            case 3:
+                cryptoType = "Ripplecoin";
+                break;
+        }
+
+        // Proceed with buying shares
+        cout << "Enter the share to sell:  ";
+        if (!(cin >> amount)) {
+            cout << "Invalid input. Please enter a numeric value for the amount.\n";
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+            continue;
+        }
+        app.sellShares(cryptoType, amount);
+        break; // Exit the while loop once the purchase is made
+    }
+    break;
                 case 6:
                     app.checkTransactions();
                     break;
@@ -323,8 +466,11 @@ int main() {
                 case 11:
                     cout << "Exiting the application.\n";
                     return 0;
-                default:
+                    default:
                     cout << "Invalid choice. Please try again.\n";
+                    cin.clear(); // Clear the fail state
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+
             }
         }
     } else {
